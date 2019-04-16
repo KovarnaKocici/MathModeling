@@ -22,11 +22,12 @@ namespace processModeling
 
     class Process
     {
+        const int NumS= 10;//number of sensors
         List<Sensor> InputS; // S = {(x,t)}
         List<Sensor> PrehistoryS; // предісторія
         List<Sensor> NotInS; // не з заданої області S
 
-        List<Sensor> ValFromArea; // y(s) з області
+        List<Sensor> ValFromArea; // y(s) з області                       
         List<Sensor> ValFromOutline; // y(s) з контура
         List<Sensor> ValCurrent; // y(s) поточні
 
@@ -41,9 +42,34 @@ namespace processModeling
         Vector<double> Ug; //uгm
         Vector<double> Y; //Y0+Yg x 1
 
-      List<string> ListLinearOperator = new List<string>() { "Dt - Dx^2" };
+        List<string> ListLinearOperator = new List<string>() { "Dt - Dx^2" };
         List<string> ListGreenFunction = new List<string>() { "H(t-t')/(....)" };
 
+
+        public Process(double x1, double xn, double T)
+        {
+
+            for (int i = 0; i < NumS; i++)
+            {
+                Sensor sensor = new Sensor(RandomFill (x1,xn),RandomFill(0,T));
+                InputS.Add(sensor);
+
+                Sensor prehistoryS = new Sensor(RandomFill(x1,xn), RandomFill(-T, 0));
+                PrehistoryS.Add(prehistoryS);
+
+                Sensor notInS = new Sensor(RandomFill(xn+1, xn + x1), RandomFill(0, T));
+                NotInS.Add(notInS); //on the right side of our range = (xn; xn+x1]
+
+                
+            }
+        }
+
+
+        private double RandomFill(double a, double b)
+        {
+            Random r = new Random();
+            return r.NextDouble() * (b - a) + a;
+        }
         private double YFunc(Sensor s)
         {
             return Math.Sin(s.T) * Math.Cos(s.X);
@@ -293,6 +319,5 @@ namespace processModeling
             for (int i = 0; i < InputS.Count; i++)
                 InputS.Add(new Sensor(InitX[i], InitT[i]));
         }
-
     }
 }

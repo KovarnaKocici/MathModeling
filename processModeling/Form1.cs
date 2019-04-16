@@ -10,15 +10,18 @@ using System.Windows.Forms;
 
 namespace processModeling
 {
-    public partial class Form1 : Form
+    public partial class FormMM : Form
     {
-        public Form1()
+        public FormMM()
         {
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Process process = new Process(Convert.ToDouble(textBoxX1.Text),Convert.ToDouble(textBoxXn.Text), Convert.ToDouble(comboBoxT.SelectedItem));
         }
+
+        
     }
 }
