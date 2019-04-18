@@ -52,9 +52,10 @@
             // labelProcess
             // 
             this.labelProcess.AutoSize = true;
-            this.labelProcess.Location = new System.Drawing.Point(12, 9);
+            this.labelProcess.Location = new System.Drawing.Point(18, 14);
+            this.labelProcess.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelProcess.Name = "labelProcess";
-            this.labelProcess.Size = new System.Drawing.Size(158, 13);
+            this.labelProcess.Size = new System.Drawing.Size(243, 20);
             this.labelProcess.TabIndex = 0;
             this.labelProcess.Text = "Виберіть диф. оператор  L(Ds)";
             // 
@@ -65,17 +66,19 @@
             "Dt-D^2x",
             "Dt^2-c^2Dx^2",
             "Dt^2-c^2(Dx1^2 +Dx2^2)"});
-            this.comboBoxProcess.Location = new System.Drawing.Point(12, 25);
+            this.comboBoxProcess.Location = new System.Drawing.Point(18, 38);
+            this.comboBoxProcess.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxProcess.Name = "comboBoxProcess";
-            this.comboBoxProcess.Size = new System.Drawing.Size(153, 21);
+            this.comboBoxProcess.Size = new System.Drawing.Size(228, 28);
             this.comboBoxProcess.TabIndex = 1;
             // 
             // labelX
             // 
             this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(12, 49);
+            this.labelX.Location = new System.Drawing.Point(18, 75);
+            this.labelX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelX.Name = "labelX";
-            this.labelX.Size = new System.Drawing.Size(121, 13);
+            this.labelX.Size = new System.Drawing.Size(179, 20);
             this.labelX.TabIndex = 2;
             this.labelX.Text = "Виберіть розмірність x";
             // 
@@ -85,17 +88,19 @@
             this.comboBoxX.Items.AddRange(new object[] {
             "Одновимірний",
             "Двовимірний"});
-            this.comboBoxX.Location = new System.Drawing.Point(12, 65);
+            this.comboBoxX.Location = new System.Drawing.Point(18, 100);
+            this.comboBoxX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxX.Name = "comboBoxX";
-            this.comboBoxX.Size = new System.Drawing.Size(153, 21);
+            this.comboBoxX.Size = new System.Drawing.Size(228, 28);
             this.comboBoxX.TabIndex = 3;
             // 
             // labelDynamic
             // 
             this.labelDynamic.AutoSize = true;
-            this.labelDynamic.Location = new System.Drawing.Point(12, 129);
+            this.labelDynamic.Location = new System.Drawing.Point(18, 198);
+            this.labelDynamic.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelDynamic.Name = "labelDynamic";
-            this.labelDynamic.Size = new System.Drawing.Size(151, 13);
+            this.labelDynamic.Size = new System.Drawing.Size(224, 20);
             this.labelDynamic.TabIndex = 4;
             this.labelDynamic.Text = "Виберіть як протікає процес";
             // 
@@ -105,9 +110,10 @@
             this.comboBoxDynamic.Items.AddRange(new object[] {
             "Динамічно",
             "Статично"});
-            this.comboBoxDynamic.Location = new System.Drawing.Point(12, 145);
+            this.comboBoxDynamic.Location = new System.Drawing.Point(18, 223);
+            this.comboBoxDynamic.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxDynamic.Name = "comboBoxDynamic";
-            this.comboBoxDynamic.Size = new System.Drawing.Size(153, 21);
+            this.comboBoxDynamic.Size = new System.Drawing.Size(228, 28);
             this.comboBoxDynamic.TabIndex = 5;
             // 
             // chartY
@@ -116,22 +122,24 @@
             this.chartY.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.chartY.Legends.Add(legend2);
-            this.chartY.Location = new System.Drawing.Point(334, 9);
+            this.chartY.Location = new System.Drawing.Point(501, 14);
+            this.chartY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chartY.Name = "chartY";
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chartY.Series.Add(series2);
-            this.chartY.Size = new System.Drawing.Size(533, 523);
+            this.chartY.Size = new System.Drawing.Size(800, 805);
             this.chartY.TabIndex = 6;
             this.chartY.Text = "chart1";
             // 
             // labelT
             // 
             this.labelT.AutoSize = true;
-            this.labelT.Location = new System.Drawing.Point(12, 169);
+            this.labelT.Location = new System.Drawing.Point(18, 260);
+            this.labelT.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelT.Name = "labelT";
-            this.labelT.Size = new System.Drawing.Size(61, 13);
+            this.labelT.Size = new System.Drawing.Size(90, 20);
             this.labelT.TabIndex = 7;
             this.labelT.Text = "Виберіть T";
             // 
@@ -139,34 +147,38 @@
             // 
             this.comboBoxT.FormattingEnabled = true;
             this.comboBoxT.Items.AddRange(new object[] {
-            "Динамічний ",
-            "Статичний"});
-            this.comboBoxT.Location = new System.Drawing.Point(12, 185);
+            "2"});
+            this.comboBoxT.Location = new System.Drawing.Point(18, 285);
+            this.comboBoxT.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxT.Name = "comboBoxT";
-            this.comboBoxT.Size = new System.Drawing.Size(153, 21);
+            this.comboBoxT.Size = new System.Drawing.Size(228, 28);
             this.comboBoxT.TabIndex = 8;
+            this.comboBoxT.SelectedIndexChanged += new System.EventHandler(this.comboBoxT_SelectedIndexChanged);
             // 
             // textBoxX1
             // 
-            this.textBoxX1.Location = new System.Drawing.Point(15, 225);
+            this.textBoxX1.Location = new System.Drawing.Point(22, 346);
+            this.textBoxX1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxX1.Name = "textBoxX1";
-            this.textBoxX1.Size = new System.Drawing.Size(58, 20);
+            this.textBoxX1.Size = new System.Drawing.Size(85, 26);
             this.textBoxX1.TabIndex = 9;
             // 
             // labelXs
             // 
             this.labelXs.AutoSize = true;
-            this.labelXs.Location = new System.Drawing.Point(12, 209);
+            this.labelXs.Location = new System.Drawing.Point(18, 322);
+            this.labelXs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelXs.Name = "labelXs";
-            this.labelXs.Size = new System.Drawing.Size(82, 13);
+            this.labelXs.Size = new System.Drawing.Size(121, 20);
             this.labelXs.TabIndex = 10;
             this.labelXs.Text = "Виберіть x1, xn";
             // 
             // textBoxXn
             // 
-            this.textBoxXn.Location = new System.Drawing.Point(105, 225);
+            this.textBoxXn.Location = new System.Drawing.Point(158, 346);
+            this.textBoxXn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxXn.Name = "textBoxXn";
-            this.textBoxXn.Size = new System.Drawing.Size(58, 20);
+            this.textBoxXn.Size = new System.Drawing.Size(85, 26);
             this.textBoxXn.TabIndex = 11;
             // 
             // comboBox1
@@ -177,35 +189,39 @@
             "y(s(x,t))=sintcosx",
             "y(s(x,t))=costcosx",
             "y(s(x,t))=costsinx"});
-            this.comboBox1.Location = new System.Drawing.Point(12, 105);
+            this.comboBox1.Location = new System.Drawing.Point(18, 162);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(153, 21);
+            this.comboBox1.Size = new System.Drawing.Size(228, 28);
             this.comboBox1.TabIndex = 12;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 89);
+            this.label1.Location = new System.Drawing.Point(18, 137);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.Size = new System.Drawing.Size(106, 20);
             this.label1.TabIndex = 13;
             this.label1.Text = "Виберіть y(s)";
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(15, 260);
+            this.buttonStart.Location = new System.Drawing.Point(22, 400);
+            this.buttonStart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(75, 23);
+            this.buttonStart.Size = new System.Drawing.Size(112, 35);
             this.buttonStart.TabIndex = 14;
             this.buttonStart.Text = "Старт";
             this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
             // FormMM
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(879, 544);
+            this.ClientSize = new System.Drawing.Size(1318, 837);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
@@ -221,7 +237,6 @@
             this.Controls.Add(this.labelX);
             this.Controls.Add(this.comboBoxProcess);
             this.Controls.Add(this.labelProcess);
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormMM";
             this.Text = "Modeling ";
             this.Load += new System.EventHandler(this.Form1_Load);
