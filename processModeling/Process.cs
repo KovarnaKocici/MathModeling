@@ -59,7 +59,7 @@ namespace processModeling
             for (int i = 0; i < NumS; i++)
             {
                 Sensor sensor = new Sensor(DRandom.Range(x1, xn), DRandom.Range(0, T));
-                InputS.Add(sensor);
+                 InputS.Add(sensor); 
 
                 Sensor prehistoryS = new Sensor(DRandom.Range(x1, xn), DRandom.Range(-T, 0));
                 PrehistoryS.Add(prehistoryS);
@@ -67,7 +67,8 @@ namespace processModeling
                 Sensor notInS = new Sensor(DRandom.Range(xn + 1, xn + x1), DRandom.Range(0, T));
                 NotInS.Add(notInS); //on the right side of our range = (xn; xn+x1]
             }
-            for (int j = 0; j < NumS / 5; j++)
+            //        for (int j = 0; j < 12; j++)
+            for (int j = 0; j < NumS/5; j++)
             {
                 Sensor sensor = new Sensor(DRandom.Range(x1, xn), 0);
                 InputS.Add(sensor);
@@ -87,7 +88,7 @@ namespace processModeling
 
         public double UFunc(Sensor s)
         {
-            return Math.Cos(s.T) * Math.Sin(s.X) - Math.Pow(Math.Sin(s.T) * Math.Cos(s.X), 2);
+            return -Math.Cos(s.X) * Math.Sin(s.T) - Math.Pow(-Math.Cos(s.T) * Math.Sin(s.X), 2);
         }
 
         private int HeavisideFunc(double x)
@@ -100,9 +101,14 @@ namespace processModeling
         public double GreenFunc(Sensor s, Sensor s_) // s, s`
         {
             //return 1 / (2 * Math.PI) * Math.Log(1 / (Math.Pow((s.X - s_.X), 2) + Math.Pow((s.T - s_.T), 2)));
-           return (HeavisideFunc(s.T - s_.T) / (Math.Sqrt(4 * Math.PI * (s.T - s_.T)))) * Math.Exp(-Math.Pow(Math.Abs(s.X - s_.X), 2) / 4 * (s.T - s_.T));
+            // return (HeavisideFunc(s.T - s_.T) / (Math.Sqrt(4 * Math.PI * (s.T - s_.T)))) * Math.Exp(-Math.Pow(Math.Abs(s.X - s_.X), 2) / (4 * (s.T - s_.T)));
+            double hf = HeavisideFunc(s.T - s_.T);
+            double denomimator = Math.Sqrt(4 * Math.PI *Math.Abs(s.T - s_.T));
+            double expArg = -Math.Pow(Math.Abs(s.X - s_.X), 2) / (4 * (s.T - s_.T));
+            double expRes = Math.Exp(expArg);
+            double res = (hf * expRes) / denomimator;
+            return res;
         }
-
         public List<Sensor> SortSensors(List<Sensor> list)
         {
             List<Sensor> sorted = new List<Sensor>(list);
@@ -262,16 +268,16 @@ namespace processModeling
             Matrix<double> A21t = A21.Transpose();
             Matrix<double> P1Pseudo = P1.PseudoInverse();
 
-            Matrix<double> A11tA21t = Matrix<double>.Build.Dense(A11.RowCount, A11.ColumnCount + A21.ColumnCount);
+            Matrix<double> A11tA21t = Matrix<double>.Build.Dense(A11t.RowCount, A11t.ColumnCount + A21t.ColumnCount);
 
             //Copy from A11t
             for (int i = 0; i < A11t.RowCount; i++)
-                for (int j = 0; j < A11t.RowCount; j++)
+                for (int j = 0; j < A11t.ColumnCount; j++)
                     A11tA21t[i, j] = A11t[i, j];
 
             //Copy from A21t
             for (int i = 0; i < A21t.RowCount; i++)
-                for (int j = 0; j < A21t.RowCount; j++)
+                for (int j = 0; j < A21t.ColumnCount; j++)
                     A11tA21t[i, A11t.ColumnCount + j] = A21t[i, j];
             
             U0 = A11tA21t * P1Pseudo * Y;
