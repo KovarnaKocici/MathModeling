@@ -26,9 +26,9 @@ namespace processModeling
             if (comboBoxDynamic.SelectedIndex != 0 || comboBoxProcess.SelectedIndex != 0 || comboBoxX.SelectedIndex != 0 || comboBoxY.SelectedIndex!=0)
             { MessageBox.Show("Даний випадок не передбачений"); }
             if (textBoxX1.Text==String.Empty || textBoxXn.Text == String.Empty) { MessageBox.Show("Введіть, будь ласка, всі дані!"); }
-            if (textBoxX1.Text != String.Empty && textBoxXn.Text != String.Empty && comboBoxT.SelectedItem == comboBoxT.Items[0])
+            if (textBoxX1.Text != String.Empty && textBoxXn.Text != String.Empty && textBoxT.Text != String.Empty)
             {
-                Process process = new Process(Convert.ToDouble(textBoxX1.Text), Convert.ToDouble(textBoxXn.Text), Convert.ToDouble(comboBoxT.SelectedItem));
+                Process process = new Process(Convert.ToDouble(textBoxX1.Text), Convert.ToDouble(textBoxXn.Text), Convert.ToDouble(textBoxT.Text));
                 //Calculate
                 process.FormY();
                 process.FormMatrixA();
@@ -40,6 +40,11 @@ namespace processModeling
                 //Y from RandomS
                 //process.BuildFuncOfState(process.GenerateS(0, 1000, 500));
                 //y(s) = yinf + y0 + yg
+                SurfaceControl surface = new SurfaceControl();
+                surface.Data = res;
+                surface.Redraw();
+                elementHost1.Child = surface;
+                
             }
 
         }

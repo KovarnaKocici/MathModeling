@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace processModeling
 {
-    class State
+    public class State
     {
         public Sensor sensor { get; }
         public double Y { get; }
@@ -21,7 +21,7 @@ namespace processModeling
         }
     }
 
-    class Sensor
+    public class Sensor
     {
         public double X { get; } // value
         public double T { get; } // time
@@ -34,7 +34,7 @@ namespace processModeling
 
     class Process
     {
-        const int NumS= 1000;//number of sensors
+        const int NumS= 10;//number of sensors
         public List<Sensor> InputS = new List<Sensor>();// S = {(x,t)}
         List<Sensor> FromOutlineS = new List<Sensor>(); // S = {(x,t): x = xmin, x = xmax}
         List<Sensor> FromAreaS = new List<Sensor>();// S = {(x,t): t = 0}
@@ -117,7 +117,7 @@ namespace processModeling
             // return (HeavisideFunc(s.T - s_.T) / (Math.Sqrt(4 * Math.PI * (s.T - s_.T)))) * Math.Exp(-Math.Pow(Math.Abs(s.X - s_.X), 2) / (4 * (s.T - s_.T)));
             double hf = HeavisideFunc(s.T - s_.T);
             double denomimator = Math.Sqrt(4 * Math.PI *Math.Abs(s.T - s_.T));
-            double expArg = -Math.Pow(Math.Abs(s.X - s_.X), 2) / (4 * (Math.Abs(s.T - s_.T) + 0.0001));
+            double expArg = -Math.Pow(Math.Abs(s.X - s_.X) + 0.0001, 2) / (4 * (Math.Abs(s.T - s_.T) + 0.0001));
             double expRes = Math.Exp(expArg);
             double res = (hf * expRes) / denomimator;
             return res;
