@@ -9,7 +9,19 @@ using System.Threading.Tasks;
 
 namespace processModeling
 {
-    class Sensor
+    public class State
+    {
+        public Sensor sensor { get; }
+        public double Y { get; }
+
+        public State(Sensor s, double y)
+        {
+            sensor = s;
+            Y = y;
+        }
+    }
+
+    public class Sensor
     {
         public double X { get; } // value
         public double T { get; } // time
@@ -23,8 +35,9 @@ namespace processModeling
     class Process
     {
         const int NumS= 10;//number of sensors
-        List<Sensor> InputS = new List<Sensor>(); // S = {(x,t)}
-        List<Sensor> FromOutlineS = new List<Sensor>(); // S = {(x,t)^ x = xmin, x = xmax}
+        public List<Sensor> InputS = new List<Sensor>();// S = {(x,t)}
+        List<Sensor> FromOutlineS = new List<Sensor>(); // S = {(x,t): x = xmin, x = xmax}
+        List<Sensor> FromAreaS = new List<Sensor>();// S = {(x,t): t = 0}
         List<Sensor> PrehistoryS = new List<Sensor>(); // предісторія
         List<Sensor> NotInS = new List<Sensor>(); // не з заданої області S
 
@@ -55,11 +68,17 @@ namespace processModeling
 
         public Process(double x1, double xn, double T)
         {
+            InputS = GenerateS(x1, xn, T);
+        }
+
+        public List<Sensor> GenerateS(double x1, double xn, double T)
+        {
+            List<Sensor> S = new List<Sensor>();
 
             for (int i = 0; i < NumS; i++)
             {
                 Sensor sensor = new Sensor(DRandom.Range(x1, xn), DRandom.Range(0, T));
-                 InputS.Add(sensor); 
+                S.Add(sensor);
 
                 Sensor prehistoryS = new Sensor(DRandom.Range(x1, xn), DRandom.Range(-T, 0));
                 PrehistoryS.Add(prehistoryS);
@@ -67,20 +86,14 @@ namespace processModeling
                 Sensor notInS = new Sensor(DRandom.Range(xn + 1, xn + x1), DRandom.Range(0, T));
                 NotInS.Add(notInS); //on the right side of our range = (xn; xn+x1]
             }
-            //        for (int j = 0; j < 12; j++)
-            for (int j = 0; j < NumS/5; j++)
+            for (int j = 0; j < NumS / 5; j++)
             {
                 Sensor sensor = new Sensor(DRandom.Range(x1, xn), 0);
-                InputS.Add(sensor);
+                S.Add(sensor);
             }
+            return S;
         }
 
-
-        //private double RandomFill(double a, double b)
-        //{
-        //    Random r = new Random();
-        //    return r.NextDouble() * (b - a) + a;
-        //}
         private double YFunc(Sensor s)
         {
             return Math.Cos(s.T) * Math.Cos(s.X);
@@ -104,7 +117,7 @@ namespace processModeling
             // return (HeavisideFunc(s.T - s_.T) / (Math.Sqrt(4 * Math.PI * (s.T - s_.T)))) * Math.Exp(-Math.Pow(Math.Abs(s.X - s_.X), 2) / (4 * (s.T - s_.T)));
             double hf = HeavisideFunc(s.T - s_.T);
             double denomimator = Math.Sqrt(4 * Math.PI *Math.Abs(s.T - s_.T));
-            double expArg = -Math.Pow(Math.Abs(s.X - s_.X), 2) / (4 * (s.T - s_.T));
+            double expArg = -Math.Pow(Math.Abs(s.X - s_.X) + 0.0001, 2) / (4 * (Math.Abs(s.T - s_.T) + 0.0001));
             double expRes = Math.Exp(expArg);
             double res = (hf * expRes) / denomimator;
             return res;
@@ -131,7 +144,10 @@ namespace processModeling
         {
             for (int i = 0; i < InputS.Count; i++)
                 if (InputS[i].T == 0)
+                {
+                    FromAreaS.Add(InputS[i]);
                     ValFromArea.Add(YFunc(InputS[i]));
+                }
         }
 
         private void FillValFromOutline()
@@ -179,18 +195,18 @@ namespace processModeling
 
         private void FormA11()
         {
-            A11 = Matrix<double>.Build.Dense(InputS.Count, PrehistoryS.Count);
+            A11 = Matrix<double>.Build.Dense(FromAreaS.Count, PrehistoryS.Count);
             for (int i = 0; i < A11.RowCount; i++)
                 for (int j = 0; j < A11.ColumnCount; j++)
-                    A11[i,j] = GreenFunc(InputS[i], PrehistoryS[j]);
+                    A11[i,j] = GreenFunc(FromAreaS[i], PrehistoryS[j]);
         }
 
         private void FormA12()
         {
-            A12 = Matrix<double>.Build.Dense(InputS.Count, NotInS.Count);
+            A12 = Matrix<double>.Build.Dense(FromAreaS.Count, NotInS.Count);
             for (int i = 0; i < A12.RowCount; i++)
                 for (int j = 0; j < A12.ColumnCount; j++)
-                    A12[i, j] = GreenFunc(InputS[i], NotInS[j]);
+                    A12[i, j] = GreenFunc(FromAreaS[i], NotInS[j]);
         }
 
         private void FormA21()
@@ -211,7 +227,7 @@ namespace processModeling
 
         public void FormMatrixA()
         {
-            A = Matrix<double>.Build.Dense(InputS.Count + ValFromOutline.Count , PrehistoryS.Count + NotInS.Count());
+            A = Matrix<double>.Build.Dense(FromAreaS.Count + ValFromOutline.Count , PrehistoryS.Count + NotInS.Count());
 
             //Form cells
             FormA11();
@@ -289,56 +305,56 @@ namespace processModeling
             Matrix<double> A22t = A22.Transpose();
             Matrix<double> P1Pseudo = P1.PseudoInverse();
 
-            Matrix<double> A12tA22t = Matrix<double>.Build.Dense(A12.RowCount, A12.ColumnCount + A22.ColumnCount);
+            Matrix<double> A12tA22t = Matrix<double>.Build.Dense(A12t.RowCount, A12t.ColumnCount + A22t.ColumnCount);
 
             //Copy from A11t
             for (int i = 0; i < A12t.RowCount; i++)
-                for (int j = 0; j < A12t.RowCount; j++)
+                for (int j = 0; j < A12t.ColumnCount; j++)
                     A12tA22t[i, j] = A12t[i, j];
 
             //Copy from A21t
             for (int i = 0; i < A22t.RowCount; i++)
-                for (int j = 0; j < A22t.RowCount; j++)
+                for (int j = 0; j < A22t.ColumnCount; j++)
                     A12tA22t[i, A12t.ColumnCount + j] = A22t[i, j];
 
             Ug = A12tA22t * P1Pseudo * Y; ;
         }
 
-        public Vector<Double> CalcYComponent(List<Sensor> S, Vector<double> u)
+        public Vector<Double> CalcYComponent(List<Sensor> S, List<Sensor> Sm, Vector<double> u)
         {
-            Vector<Double> res = Vector<Double>.Build.Dense(InputS.Count, 0);
-            for (int i = 0; i < res.Count; i++)
-                res[i] += GreenFunc(InputS[i], S[i]) * u[i];
+            Vector<Double> res = Vector<Double>.Build.Dense(S.Count, 0);
+            for (int i = 0; i < u.Count; i++)
+                res[i] += GreenFunc(S[i], Sm[i]) * u[i];
             return res;
         }
 
-        private Vector<Double> CalcYinf()
+        private Vector<Double> CalcYinf(List<Sensor> S)
         {
-            Vector<Double> res = Vector<Double>.Build.Dense(InputS.Count);
+            Vector<Double> res = Vector<Double>.Build.Dense(S.Count);
             for (int i = 0; i < res.Count; i++)
                 res[i] = UFunc(InputS[i]);
             return res;
         }
 
-        private Vector<Double> CalcY0()
+        private Vector<Double> CalcY0(List<Sensor> S)
         {
-            return CalcYComponent(PrehistoryS, U0);
+            return CalcYComponent(S, PrehistoryS, U0);
         }
 
-        private Vector<Double> CalcYg()
+        private Vector<Double> CalcYg(List<Sensor> S)
         {
-            return CalcYComponent(NotInS, Ug);
+            return CalcYComponent(S, NotInS, Ug);
         }
 
-        private Vector<Double> CalcY() {
-            return CalcYinf() + CalcY0() + CalcYg();
+        private Vector<Double> CalcY(List<Sensor> S) {
+            return CalcYinf(S) + CalcY0(S) + CalcYg(S);
         }
 
-        public List<Sensor> BuildFuncOfState() {
-            Vector<Double> y = CalcY();
-            List<Sensor> res = new List<Sensor>();
+        public List<State> BuildFuncOfState(List<Sensor> S) {
+            Vector<Double> y = CalcY(S);
+            List<State> res = new List<State>();
             for (int i = 0; i < InputS.Count; i++)
-                res.Add(new Sensor(y[i], InputS[i].T));
+                res.Add(new State(InputS[i], y[i]));
             return res;
         }
     }
