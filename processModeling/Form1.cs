@@ -37,6 +37,11 @@ namespace processModeling
                 process.FormUg();
                 //Y from InputS
                 List<State> res = process.BuildFuncOfState(process.InputS);
+                for (int i = 0; i < res.Count; i++)
+                { finalYs.Items.Add(res[i].Y.ToString()); }
+                List<double> res2 = process.Filly();
+                for (int i = 0; i < res2.Count; i++)
+                { initYs.Items.Add(res2[i].ToString()); }
                 //Y from RandomS
                 //process.BuildFuncOfState(process.GenerateS(0, 1000, 500));
                 //y(s) = yinf + y0 + yg
