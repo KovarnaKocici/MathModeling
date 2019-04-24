@@ -43,7 +43,7 @@ namespace processModeling
 
         List<double> ValFromArea = new List<double>(); // y(s) з області   t=0                     
         List<double> ValFromOutline = new List<double>(); // y(s) з контура
-        // List<double> ValCurrent; // y(s) поточні
+        List<double> ValCurrent=new List<double>(); // y(s) поточні
 
         Matrix<double> A;
         Matrix<double> A11;
@@ -69,12 +69,13 @@ namespace processModeling
         public Process(double x1, double xn, double T)
         {
             InputS = GenerateS(x1, xn, T);
+
         }
 
         public List<Sensor> GenerateS(double x1, double xn, double T)
         {
             List<Sensor> S = new List<Sensor>();
-
+            
             for (int i = 0; i < NumS; i++)
             {
                 Sensor sensor = new Sensor(DRandom.Range(x1, xn), DRandom.Range(0, T));
@@ -110,7 +111,14 @@ namespace processModeling
                 return 0;
            else return 1;
         }
-
+        public List<double> Filly()
+        {
+            for (int i = 0; i < InputS.Count; i++)
+            {
+                ValCurrent.Add(YFunc(InputS[i]));
+            }
+            return ValCurrent;
+        }
         public double GreenFunc(Sensor s, Sensor s_) // s, s`
         {
             //return 1 / (2 * Math.PI) * Math.Log(1 / (Math.Pow((s.X - s_.X), 2) + Math.Pow((s.T - s_.T), 2)));
